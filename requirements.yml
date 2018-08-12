@@ -1,0 +1,215 @@
+acquire:
+  active: True
+  order:  [
+            'update apt-get',
+            'install apt-get packages',
+            'configure conda',
+            'update conda',
+            'install conda packages',
+            'upgrade pip',
+            'install pip packages',
+            'install yum packages',
+            'configure git',
+            'clone git repositories',
+          ]
+
+
+update apt-get:
+  active: True
+  verify:
+    active: False
+  install:
+    command: 'apt-get update'
+    option: '-y'
+    packages: [' ']
+
+
+install apt-get packages:
+  active: True
+  verify:
+    active: True
+    show:
+      command: 'apt show'
+      missing: 'No packages found'
+    list:
+      command: 'apt list --installed'
+      headers: 1
+      extract name: [0, '/']
+      extract version: [1, '']
+  install:
+    command: 'apt-get install'
+    option: '-y'
+    packages: [
+              #### for xgboost compiling from source:
+              #'build-essential'
+              #'g++',
+              #'--reinstall make',
+              #### for exchangelib (email capabilities) we need this:
+              apt-utils,
+              libxml2-dev,
+              libxslt-dev,
+              libkrb5-dev,
+              build-essential,
+              libssl-dev,
+              libffi-dev,
+              python-dev,
+              #### and db2connect needs gcc unixodbc-dev:
+              gcc,
+              unixodbc-dev,
+              #### for mounting network drives
+              cifs-utils,
+            ]
+
+
+configure conda:
+  active: True
+  verify:
+    active: False
+  install:
+    command: 'conda config'
+    option: '--set ssl_verify'
+    packages: [false]
+
+
+update conda:
+  active: True
+  verify:
+    active: False
+  install:
+    command: 'conda update'
+    option: '-y'
+    packages: [conda]
+
+
+install conda packages:
+  active: True
+  verify:
+    active: True
+    show:
+      command: 'conda info'
+      missing: ''
+    list:
+      command: 'conda list'
+      headers: 3
+      extract name: [0, '']
+      extract version: [1, '']
+  install:
+    command: 'conda install'
+    option: '-y'
+    packages: [
+                pandas,
+                numpy,
+                Sphinx,
+                jinja2,
+                ipywidgets,
+                IPython,
+                holoviews,
+                bokeh,
+                plotly,
+                matplotlib,
+                seaborn,
+                pathlib,
+                PyYAML,
+                tqdm,
+                dask,
+                python-dateutil,
+                statsmodels,
+                flask,
+                wtforms,
+                pytest,
+              ]
+
+
+upgrade pip:
+  active: True
+  verify:
+    active: False
+  install:
+    command: 'python -m pip install'
+    option: '--upgrade --trusted-host pypi.org'
+    packages: [pip]
+
+install pip packages:
+  active: True
+  verify:
+    active: True
+    show:
+      command: 'pip show'
+      missing: ''
+    list:
+      command: 'pip list'
+      headers: 2
+      extract name: [0, '']
+      extract version: [1, '']
+  install:
+    command: 'pip install'
+    option: '--trusted-host pypi.org'
+    packages: [ chainladder==0.1.7,
+                sklearn,
+                request,
+                Flask-WTF,
+                unicode,
+                exchangelib,
+                jupyter,
+                xgboost,
+                '/app/prod/wcf_pm3/libraries/include/dbconnect',
+                #logging, # not using logging right now
+                #dedupe,  # no longer part of the process
+                #http,    # only used in a manual one-time-test, not needed
+              ]
+
+####### not required for this image:
+
+install yum packages:
+  active: False
+  verify:
+    active: True
+    show:
+      command: 'yum info'
+      missing: 'No matching Packages'
+    list:
+      header: 'yum list'
+      headers: 3
+      extract name: [0, '']
+      extract version: [1, '']
+  install:
+    command: 'yum install'
+    option: '-y'
+    packages: [
+                gcc,
+                python-devel,
+                krb5-devel,
+                krb5-workstation,
+                python-devel,
+              ]
+
+
+configure git:
+  active: False
+  verify:
+    active: False
+  install:
+    command: 'git config'
+    option: '--global http.sslverify'
+    packages: [false]
+
+
+clone git repositories:
+  active: False
+  verify:
+    active: False
+  install:
+    command: 'git clone'
+    option: '--recursive'
+    packages: [ 'https://github.com/dmlc/xgboost']
+
+#### you can theoretically even create a space or building and compiling:
+
+# compile git repository:
+#   active: False
+#   verify:
+#     active: False
+#   install:
+#     command: ''
+#     option: ''
+#     packages: [ 'cd xgboost ; make -j4 ; cd ..']
