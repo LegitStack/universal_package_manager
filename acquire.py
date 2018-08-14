@@ -8,16 +8,15 @@ to install files from whatever package repository is specified.
 It requires subprocess and yaml to be installed first.
 '''
 
-def change_directory_to_include(repo_folder='', repo_path=''):
+def change_directory_to_include(repo_folder='include', repo_path=''):
     ''' this is for pulling down repos into this directory
         change the repo_folder to specify a relative path
-        change the repo_path as a path to the repos folder from root'''
+        change the repo_path as a path to the repos folder from root.
+        this assumes this file is located in ./lib/universal_package_manager/'''
     if repo_path != '':
         os.chdir(repo_path)
-    elif repo_folder != '':
-        os.chdir(os.path.join( os.path.dirname(os.path.abspath(__file__)), repo_folder ))
     else:
-        os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        os.chdir(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), repo_folder))
 
 
 def get_yaml_file(name='requirements.yml'):
