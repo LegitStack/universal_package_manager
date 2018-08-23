@@ -16,7 +16,8 @@ def change_directory_to_include(repo_folder='include', repo_path=''):
     if repo_path != '':
         os.chdir(repo_path)
     else:
-        os.chdir(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), repo_folder))
+        if os.path.isdir(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), repo_folder)):
+            os.chdir(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), repo_folder))
 
 
 def get_yaml_file(name='requirements.yml'):
