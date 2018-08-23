@@ -172,37 +172,37 @@ def bootstrap_yaml():
 
 
 if __name__ == '__main__':
-    if [i for i in sys.argv if i in ['--h', '-help','help','commands']]:
+    if [i for i in sys.argv if i in ['-h', '--help','help','commands']]:
         print()
         print('commands:')
         print()
         print(' verify all requirements and install missing required packages:')
-        print('     --v, --vr, --vap, -verify_requirements, -verify_all_packages | [repo name]')
+        print('     -v, -vr, -vap, --verify_requirements, --verify_all_packages | [repo name]')
         print()
         print(' verifies one package:')
-        print('     --p, --vp, -verify_package | package name')
+        print('     -p, -vp, --verify_package | package name')
         print()
         print(' changes working directory to include folder (for git):')
-        print('     --c, --cd, -change_directory')
+        print('     -c, -cd, --change_directory')
         print()
         print(' install yaml manually before we use yaml to read what packages are required:')
-        print('     --b, --y, --by, -bootstrap_yaml')
+        print('     -b, -y, -by, --bootstrap_yaml')
         print()
         print(' attempt to install all required packages without checking if they exist first:')
-        print('     --i, -install')
+        print('     -i, --install')
         print()
         print(' display help:')
-        print('     --h, -help, help, commands')
+        print('     -h, --help, help, commands')
         print()
-    if [i for i in sys.argv if i in ['--c', '--cd', '-change_directory']]:
+    if [i for i in sys.argv if i in ['-c', '-cd', '--change_directory']]:
         change_directory_to_include()
-    if [i for i in sys.argv if i in ['--b', '--y', '--by', '-bootstrap_yaml']]:
+    if [i for i in sys.argv if i in ['-b', '-y', '-by', '--bootstrap_yaml']]:
         bootstrap_yaml()
-    if [i for i in sys.argv if i in ['--i', '-install']]:
+    if [i for i in sys.argv if i in ['-i', '--install']]:
         grab_reqs(get_yaml_data())
-    if [i for i in sys.argv if i in ['--p','--vp', '-verify_package']]:
+    if [i for i in sys.argv if i in ['-p','-vp', '--verify_package']]:
         verify_package(get_yaml_data(), package_name=sys.argv[-1])
-    if [i for i in sys.argv if i in ['--v', '--vr','--vap','-verify_requirements','-verify_all_packages']]:
+    if [i for i in sys.argv if i in ['-v', '-vr','-vap','--verify_requirements','--verify_all_packages']]:
         verify_requirements(get_yaml_data())
     if len(sys.argv) == 1:
         change_directory_to_include()
