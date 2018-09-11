@@ -48,7 +48,8 @@ Typically a Dockerfile...
   or run it some other way upon start up in order to continually stay up dated.
 
 The requirements file contains lines for verifying if packages are installed
-`
+
+```
   verify:
     active: True
     show:
@@ -59,7 +60,8 @@ The requirements file contains lines for verifying if packages are installed
       headers: 1
       extract name: [0, '/']
       extract version: [1, '']
-`
+```
+
 These two lines describe how to parse the line containing the package name and
 version number. The first element of the list is a number indicating the
 index position of name, while the second indicates how the line should be split.
