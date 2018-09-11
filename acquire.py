@@ -44,21 +44,35 @@ def grab_package(command, option, package):
     run_subprocess('{0} {1} {2}'.format(command, option, package))
 
 
-def run_subprocess(command, print_oe=True):
+def run_subprocess(command, print_oe=True, streaming=True, streaming_colors={'example':([Style.BRIGHT, Fore.CYAN],'copy')}):
     output = ''
     error  = ''
     try:
-        print('---> command: ',command)
-        result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output,error = result.communicate()
-        output = output.decode("utf-8")
-        error = error.decode("utf-8")
-        if print_oe:
-            print('---> output:  ',output)
-            print('---> errors:  ',error, '\n\n')
+        print('--> command: ',command)
+        if streaming:
+            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            for line in iter(process.stdout.readline, b''):
+                out = line.decode('utf-8')
+                ###from colorama import init,Fore, Style
+                ###import pyperclip
+                #for k,v in streaming_colors.items():
+                #    if k in out.split():
+                #        sys.stdout.write(v[0][0] + v[0][1] + out)
+                #        if v[1] == 'copy':
+                #            pyperclip.copy(out)
+                #   else:
+                sys.stdout.write(out)
+        else:
+            result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            output,error = result.communicate()
+            output = output.decode("utf-8")
+            error = error.decode("utf-8")
+            if print_oe:
+                print('--> output:  ',output)
+                print('--> errors:  ',error, '\n\n')
     except Exception as e:
-        print('---> command: ',command)
-        print('---> errors:  ')
+        print('--> command: ',command)
+        print('--> errors:  ')
         print(type(e))
         print(e.args)
         print(e)
