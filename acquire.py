@@ -44,7 +44,7 @@ def grab_package(command, option, package):
     run_subprocess('{0} {1} {2}'.format(command, option, package))
 
 
-def run_subprocess(command, print_oe=True, streaming=True, streaming_colors={'example':([Style.BRIGHT, Fore.CYAN],'copy')}):
+def run_subprocess(command, print_oe=True, streaming=True, streaming_colors={'example':'''([Style.BRIGHT, Fore.CYAN],'copy') without the triple quotes.'''}):
     output = ''
     error  = ''
     try:
@@ -183,7 +183,7 @@ def bootstrap_yaml():
     with open(get_yaml_file('bootstrap')) as f:
         lines = f.readlines()
     for line in lines:
-        output, error = run_subprocess(line)
+        output, error = run_subprocess(line.split('\n')[0])
 
 
 if __name__ == '__main__':
@@ -192,13 +192,13 @@ if __name__ == '__main__':
         print('commands:')
         print()
         print(' verify all requirements and install missing required packages:')
-        print('     -v, -vr, -vap, --verify_requirements, --verify_all_packages | [repo name]')
+        print('     -v, -vr, -vap, --verify_requirements, --verify_all_packages')
         print()
         print(' verifies one package:')
-        print('     -p, -vp, --verify_package | package name')
+        print('     -p, -vp, --verify_package | [package name]')
         print()
         print(' changes working directory to include folder (for git):')
-        print('     -c, -cd, --change_directory')
+        print('     -c, -cd, --change_directory | [directory]')
         print()
         print(' install yaml manually before we use yaml to read what packages are required:')
         print('     -b, -y, -by, --bootstrap_yaml')
@@ -209,16 +209,24 @@ if __name__ == '__main__':
         print(' display help:')
         print('     -h, --help, help, commands')
         print()
-    if [i for i in sys.argv if i in ['-c', '-cd', '--change_directory']]:
-        change_directory_to_include()
-    if [i for i in sys.argv if i in ['-b', '-y', '-by', '--bootstrap_yaml']]:
-        bootstrap_yaml()
-    if [i for i in sys.argv if i in ['-i', '--install']]:
-        grab_reqs(get_yaml_data())
-    if [i for i in sys.argv if i in ['-p','-vp', '--verify_package']]:
-        verify_package(get_yaml_data(), package_name=sys.argv[-1])
-    if [i for i in sys.argv if i in ['-v', '-vr','-vap','--verify_requirements','--verify_all_packages']]:
-        verify_requirements(get_yaml_data())
+    for x,i in enumerate(sys.argv):
+        if i in ['-c', '-cd', '--change_directory']:
+            change_directory_to_include(repo_path=sys.argv[x+1])
+            break
+    for i in sys.argv:
+        if i in ['-b', '-y', '-by', '--bootstrap_yaml']:
+            bootstrap_yaml()
+            break
+    for i in sys.argv:
+        if i in ['-i', '--install']:
+            grab_reqs(get_yaml_data())
+    for x,i in enumerate(sys.argv):
+        if i in ['-p','-vp', '--verify_package']:
+            verify_package(get_yaml_data(), package_name=sys.argv[x+1])
+            break
+    for i in sys.argv:
+        if i in ['-v', '-vr','-vap','--verify_requirements','--verify_all_packages']:
+            verify_requirements(get_yaml_data())
     if len(sys.argv) == 1:
         change_directory_to_include()
         bootstrap_yaml()
