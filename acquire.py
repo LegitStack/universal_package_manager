@@ -44,7 +44,7 @@ def grab_package(command, option, package):
     run_subprocess('{0} {1} {2}'.format(command, option, package))
 
 
-def run_subprocess(command, print_oe=True, streaming=True, streaming_colors={'example':'''([Style.BRIGHT, Fore.CYAN],'copy') without the triple quotes.'''}):
+def run_subprocess(command, print_oe=True, streaming=False, streaming_colors={'example':'''([Style.BRIGHT, Fore.CYAN],'copy') without the triple quotes.'''}):
     output = ''
     error  = ''
     try:
@@ -228,6 +228,6 @@ if __name__ == '__main__':
         if i in ['-v', '-vr','-vap','--verify_requirements','--verify_all_packages']:
             verify_requirements(get_yaml_data())
     if len(sys.argv) == 1:
-        change_directory_to_include()
+        #change_directory_to_include()
         bootstrap_yaml()
         verify_requirements(get_yaml_data())
